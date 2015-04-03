@@ -1,0 +1,18 @@
+Package: Pusto
+Title: Pusto's miscellaneous data analysis and simulation tools
+Version: 0.1
+Authors@R: person("James", "Pustejovsky", , "pusto@austin.utexas.edu", role = c("aut", "cre"))
+Description: Miscellaneous data analysis and simulation tools. Includes functions to:
+  quickly initialize cluster on Windows or Mac,
+  open a template .Rnw file for writing an APA-6 style manusript, and
+  open a skeleton for writing a Monte Carlo simulation study.
+URL: https://github.com/jepusto/Pusto
+Depends: R (>= 3.1.2)
+Depends:
+  parallel
+Imports:
+  doParallel
+Suggests:
+  plyr
+License: GPL (>= 2)
+LazyData: true
