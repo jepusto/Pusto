@@ -18,6 +18,7 @@ Rnw_APA6 <- function(filename) {
   to <- paste0(gsub(" ","-",filename),".Rnw")
   copy <- file.copy(from, to)
   file.edit(to)
+  return(NULL)
 }
 
 
@@ -40,6 +41,7 @@ Simulation_Skeleton <- function(filename) {
   to <- paste0(filename,".R")
   copy <- file.copy(from, to)
   file.edit(to)
+  return(NULL)
 }
 
 
