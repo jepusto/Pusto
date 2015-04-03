@@ -4,10 +4,12 @@
 \alias{Simulation_Skeleton}
 \title{Open a simulation skeleton}
 \usage{
-Simulation_Skeleton(filename)
+Simulation_Skeleton(filename, ...)
 }
 \arguments{
 \item{filename}{Name of file to create.}
+
+\item{...}{Further arguments passed to file.copy}
 }
 \description{
 Creates and opens an .R file containing a skeleton for writing a Monte Carlo simulation study.

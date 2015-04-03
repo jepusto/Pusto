@@ -4,6 +4,7 @@
 #' Creates and opens an .Rnw file containing a template for writing a manuscript in APA-6 style.
 #'
 #' @param filename Name of file to create.
+#' @param ... Further arguments passed to file.copy
 #'
 #' @export
 #'
@@ -13,12 +14,12 @@
 #' }
 
 
-Rnw_APA6 <- function(filename) {
+Rnw_APA6 <- function(filename, ...) {
   from <- system.file("templates","APA6.Rnw",package="Pusto")
   to <- paste0(gsub(" ","-",filename),".Rnw")
-  copy <- file.copy(from, to)
-  file.edit(to)
-  return(NULL)
+  copy <- file.copy(from, to, ...)
+
+  return(file.edit(to))
 }
 
 
@@ -28,6 +29,7 @@ Rnw_APA6 <- function(filename) {
 #' Creates and opens an .R file containing a skeleton for writing a Monte Carlo simulation study.
 #'
 #' @param filename Name of file to create.
+#' @param ... Further arguments passed to file.copy
 #'
 #' @export
 #'
@@ -36,12 +38,11 @@ Rnw_APA6 <- function(filename) {
 #' Simulation_Skeleton("Behrens-Fisher problem")
 #' }
 
-Simulation_Skeleton <- function(filename) {
+Simulation_Skeleton <- function(filename, ...) {
   from <- system.file("templates","Simulation-Skeleton.R",package="Pusto")
   to <- paste0(filename,".R")
-  copy <- file.copy(from, to)
-  file.edit(to)
-  return(NULL)
+  copy <- file.copy(from, to, ...)
+  return(file.edit(to))
 }
 
 

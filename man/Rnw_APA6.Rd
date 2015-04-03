@@ -4,10 +4,12 @@
 \alias{Rnw_APA6}
 \title{Open an APA-6 style .Rnw template}
 \usage{
-Rnw_APA6(filename)
+Rnw_APA6(filename, ...)
 }
 \arguments{
 \item{filename}{Name of file to create.}
+
+\item{...}{Further arguments passed to file.copy}
 }
 \description{
 Creates and opens an .Rnw file containing a template for writing a manuscript in APA-6 style.
