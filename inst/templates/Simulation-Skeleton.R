@@ -59,7 +59,7 @@ runSim <- function(iterations, model_params, design_params, seed = NULL) {
   performance(results, model_params)
 }
 
-# demomstrate the simulation driver
+# demonstrate the simulation driver
 
 
 #-------------------------------------
@@ -86,6 +86,7 @@ head(params)
 #--------------------------------------------------------
 # run simulations in serial
 #--------------------------------------------------------
+library(plyr)
 
 system.time(results <- mdply(params, .fun = runSim))
 
