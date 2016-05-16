@@ -7,6 +7,7 @@
 #' of the specified number of nodes with DoParallel.
 #'
 #' @param source_obj list of objects to be exported to each node of the cluster. Defaults to NULL.
+#' @param libraries list of library names to be exported to each node of the cluster. Defaults to NULL.
 #' @param cores desired number of cores. Defaults to one less than the number of available cores.
 #'
 #' @export
@@ -21,13 +22,16 @@
 #' @import parallel
 
 
-start_parallel <- function(source_obj = NULL, cores) {
+start_parallel <- function(source_obj = NULL, libraries = NULL, cores) {
   if (missing(cores)) cores <- detectCores() - 1
 
   if (!is.na(pmatch("Windows", Sys.getenv("OS")))) {
     cluster <- makePSOCKcluster(cores)
     doParallel::registerDoParallel(cluster)
     clusterExport(cluster, source_obj)
+    library_calls <- lapply(libraries, function(lib) call("library",lib))
+    clusterExport(cluster, "library_calls")
+    clusterEvalQ(cluster, lapply(library_calls, eval))
     cat("Don't forget to use stopCluster() to close the cluster.")
     return(cluster)
   } else {
