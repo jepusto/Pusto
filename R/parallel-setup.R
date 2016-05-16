@@ -6,9 +6,9 @@
 #' and other operating systems that can take advantage of multicore, the function simply registers a cluster
 #' of the specified number of nodes with DoParallel.
 #'
+#' @param cores desired number of cores. Defaults to one less than the number of available cores.
 #' @param source_obj list of objects to be exported to each node of the cluster. Defaults to NULL.
 #' @param libraries list of library names to be exported to each node of the cluster. Defaults to NULL.
-#' @param cores desired number of cores. Defaults to one less than the number of available cores.
 #' @param message Print reminder to turn off the cluster when it is no longer needed. Defaults to TRUE.
 #'
 #' @export
