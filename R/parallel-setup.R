@@ -31,7 +31,7 @@ start_parallel <- function(cores, source_obj = NULL, libraries = NULL, message =
     doParallel::registerDoParallel(cluster)
     clusterExport(cluster, source_obj)
     library_calls <- lapply(libraries, function(lib) call("library",lib))
-    clusterExport(cluster, "library_calls")
+    clusterExport(cluster, "library_calls", envir = environment())
     clusterEvalQ(cluster, lapply(library_calls, eval))
     if (message) cat("Don't forget to use stopCluster() to close the cluster.")
     return(cluster)
