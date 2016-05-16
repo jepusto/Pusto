@@ -9,6 +9,7 @@
 #' @param source_obj list of objects to be exported to each node of the cluster. Defaults to NULL.
 #' @param libraries list of library names to be exported to each node of the cluster. Defaults to NULL.
 #' @param cores desired number of cores. Defaults to one less than the number of available cores.
+#' @param message Print reminder to turn off the cluster when it is no longer needed. Defaults to TRUE.
 #'
 #' @export
 #'
@@ -22,7 +23,7 @@
 #' @import parallel
 
 
-start_parallel <- function(source_obj = NULL, libraries = NULL, cores) {
+start_parallel <- function(cores, source_obj = NULL, libraries = NULL, message = TRUE) {
   if (missing(cores)) cores <- detectCores() - 1
 
   if (!is.na(pmatch("Windows", Sys.getenv("OS")))) {
@@ -32,7 +33,7 @@ start_parallel <- function(source_obj = NULL, libraries = NULL, cores) {
     library_calls <- lapply(libraries, function(lib) call("library",lib))
     clusterExport(cluster, "library_calls")
     clusterEvalQ(cluster, lapply(library_calls, eval))
-    cat("Don't forget to use stopCluster() to close the cluster.")
+    if (message) cat("Don't forget to use stopCluster() to close the cluster.")
     return(cluster)
   } else {
     doParallel::registerDoParallel(cores=cores)

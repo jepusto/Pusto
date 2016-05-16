@@ -1,0 +1,37 @@
+---
+title: "Pusto's R style guide"
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+    keep_md: true
+---
+
+This is the style guide for students who are collaborating with or working for me. A coding style guide, much like the APA style guide, is a set of conventions designed to make it easier to read, debug, share, and generally interact with code. I make no claim that these rules are the best or only way to write clear, legible code---they are just conventions that I try to follow, refined as I've learned more about programming. 
+
+# Object names
+
+* Name objects using camel case. 
+* Variables and functions should have clearly descriptive names if possible, so long as they are not too long. 
+* Avoid variable names that conflict with common functions (e.g., `c`, `vcov`).
+* Avoid `_` and `.` in variable names, with the following exceptions:
+    * Use `_` in variables that are natural to name with subscripts. For instance, $y_j$ should be called `y_j`.  
+    * Use `.` only for S3 method names. For example, the `print` method for an object of class `pusto` has to be called `print.pusto`. 
+
+# Functions
+
+Make function names verbs if possible. 
+
+# Assignment
+
+# Spacing
+
+# Indentation
+
+# File names
+
+# Line length
+
+# Commenting
+
+# Layout
