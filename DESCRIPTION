@@ -11,7 +11,9 @@ Depends:
     R (>= 3.1.2),
     parallel
 Imports:
-    doParallel
+    doParallel,
+    snow,
+    doSNOW
 Suggests:
     plyr
 License: GPL (>= 2)

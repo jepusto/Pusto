@@ -23,20 +23,61 @@
 #' @import parallel
 
 
-start_parallel <- function(cores, source_obj = NULL, libraries = NULL, message = TRUE) {
-  if (missing(cores)) cores <- detectCores() - 1
 
-  if (!is.na(pmatch("Windows", Sys.getenv("OS")))) {
-    cluster <- makePSOCKcluster(cores)
-    doParallel::registerDoParallel(cluster)
-    clusterExport(cluster, source_obj)
-    library_calls <- lapply(libraries, function(lib) call("library",lib))
-    clusterExport(cluster, "library_calls", envir = environment())
-    clusterEvalQ(cluster, lapply(library_calls, eval))
-    if (message) cat("Don't forget to use stopCluster() to close the cluster.")
-    return(cluster)
+start_parallel <- function(cores, source_obj = NULL, libraries = NULL, message = TRUE) {
+  
+  if (is.null(snow::getMPIcluster())) {
+    
+    # desktop setup
+    
+    if (missing(cores)) cores <- detectCores() - 1
+    
+    if (!is.na(pmatch("Windows", Sys.getenv("OS")))) {
+      cluster <- makePSOCKcluster(cores)
+      doParallel::registerDoParallel(cluster)
+      
+      if (!is.null(source_obj)) {
+        clusterExport(cluster, source_obj)  
+      }
+      
+      if (!is.null(libraries)) {
+        library_calls <- lapply(libraries, function(lib) call("library",lib))
+        clusterExport(cluster, "library_calls", envir = environment())
+        clusterEvalQ(cluster, lapply(library_calls, eval))  
+      }
+      
+      if (message) cat("Don't forget to use stopCluster() to close the cluster.")
+      return(cluster)
+    } else {
+      doParallel::registerDoParallel(cores=cores)
+      return(NULL)
+    }
+    
   } else {
-    doParallel::registerDoParallel(cores=cores)
-    return(NULL)
+    
+    # TACC setup
+    
+    cluster <- snow::getMPIcluster()
+    
+    # library(Rmpi)
+    # library(snow)
+    # library(foreach)
+    # library(iterators)
+    # library(doSNOW)
+    
+    doSNOW::registerDoSNOW(cluster)
+    clusterExport(cluster, source_obj)
+    
+    if (!is.null(source_obj)) {
+      clusterExport(cluster, source_obj)  
+    }
+    
+    if (!is.null(libraries)) {
+      library_calls <- lapply(libraries, function(lib) call("library",lib))
+      clusterExport(cluster, "library_calls", envir = environment())
+      clusterEvalQ(cluster, lapply(library_calls, eval))  
+    }
+    
+    return(cluster)
   }
 }
