@@ -12,10 +12,11 @@ Depends:
     parallel
 Imports:
     doParallel,
+    doSNOW,
     snow,
-    doSNOW
 Suggests:
-    plyr
+    plyr,
+    multidplyr
 License: GPL (>= 2)
 LazyData: true
 RoxygenNote: 5.0.1
