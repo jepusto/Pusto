@@ -1,6 +1,6 @@
 Package: Pusto
 Title: Pusto's miscellaneous data analysis and simulation tools
-Version: 0.1
+Version: 0.2
 Authors@R: person("James", "Pustejovsky", , "pusto@austin.utexas.edu", role = c("aut", "cre"))
 Description: Miscellaneous data analysis and simulation tools. Includes
     functions to: quickly initialize cluster on Windows or Mac, open a template .Rnw
