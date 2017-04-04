@@ -44,9 +44,9 @@ performance <- function(results, model_params) {
 
 # Check performance calculations
 
-#------------------------------------------------------
-# Simulation Driver
-#------------------------------------------------------
+#-----------------------------------------------------------
+# Simulation Driver - should return a data.frame or tibble
+#-----------------------------------------------------------
 
 runSim <- function(iterations, model_params, design_params, seed = NULL) {
   if (!is.null(seed)) set.seed(seed)
@@ -74,35 +74,65 @@ set.seed(20150316) # change this seed value!
 design_factors <- list(factor1 = , factor2 = , ...) # combine into a design set
 params <- expand.grid(design_factors)
 params$iterations <- 5
-params$seed <- round(runif(nrow(params)) * 2^30)
+params$seed <- round(runif(1) * 2^30) + 1:nrow(params)
 
 # All look right?
-sapply(design_factors, length)
+lengths(design_factors)
 nrow(params)
 head(params)
 
 
 
 #--------------------------------------------------------
-# run simulations in serial
-#--------------------------------------------------------
-library(plyr)
-
-system.time(results <- mdply(params, .fun = runSim))
-
-#--------------------------------------------------------
-# run simulations in parallel
+# run simulations in serial - mdply workflow
 #--------------------------------------------------------
 
-library(plyr)
+system.time(results <- plyr::mdply(params, .fun = runSim))
+
+#--------------------------------------------------------
+# run simulations in serial - purrr workflow
+#--------------------------------------------------------
+library(purrr)
+
+system.time(
+  results <- 
+    params %>% 
+    invoke_rows(.f = runSim, .to = "res")
+)
+
+#--------------------------------------------------------
+# run simulations in parallel - mdply workflow
+#--------------------------------------------------------
+
 library(Pusto)
-cluster <- start_parallel(source_obj)
+cluster <- start_parallel(source_obj = source_obj)
 
-system.time(results <- mdply(params, .fun = runSim, .parallel = TRUE))
+system.time(results <- plyr::mdply(params, .fun = runSim, .parallel = TRUE))
 
 stopCluster(cluster)
 
+#--------------------------------------------------------
+# run simulations in parallel - multidplyr workflow
+#--------------------------------------------------------
 
-save(results, file = "Simulation Results.Rdata")
+library(multidplyr)
+library(Pusto)
+cluster <- start_parallel(source_obj = source_obj)
 
+system.time(
+  results <- 
+    params %>%
+    partition(cluster = cluster) %>%
+    do(invoke_rows(.d = ., .f = runSim, .to = "res")) %>%
+    collect() %>% ungroup() %>%
+    select(-PARTITION_ID)
+)
 
+#--------------------------------------------------------
+# Save results and details
+#--------------------------------------------------------
+
+session_info <- sessionInfo()
+run_date <- date()
+
+save(params, results, session_info, run_date, file = "Simulation Results.Rdata")
