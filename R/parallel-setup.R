@@ -31,7 +31,7 @@
 #' cluster <- start_parallel()
 #' stopCluster(cluster)
 #' }
-#' @import parallel
+#'
 #'   
 
 
@@ -53,12 +53,12 @@ start_parallel <- function (cores, source_obj = NULL, packages = NULL,
         doSNOW::registerDoSNOW(cluster)
       } 
       if (!is.null(source_obj)) {
-        parallel::clusterExport(cluster, source_obj)
+        snow::clusterExport(cluster, source_obj)
       }
       if (!is.null(packages)) {
         library_calls <- lapply(packages, function(lib) call("library", lib))
-        parallel::clusterExport(cluster, "library_calls", envir = environment())
-        parallel::clusterEvalQ(cluster, lapply(library_calls, eval))
+        snow::clusterExport(cluster, "library_calls", envir = environment())
+        snow::clusterEvalQ(cluster, lapply(library_calls, eval))
       }
       return(cluster)
     }

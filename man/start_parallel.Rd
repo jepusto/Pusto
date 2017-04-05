@@ -41,5 +41,7 @@ On Windows, this function initializes a socket cluster and then
 cluster <- start_parallel()
 stopCluster(cluster)
 }
+
+  
 }
 

@@ -3,4 +3,3 @@
 export(Rnw_APA6)
 export(Simulation_Skeleton)
 export(start_parallel)
-import(parallel)
