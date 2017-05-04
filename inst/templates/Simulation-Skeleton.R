@@ -105,7 +105,7 @@ system.time(
 #--------------------------------------------------------
 
 library(Pusto)
-cluster <- start_parallel(source_obj = source_obj)
+cluster <- start_parallel(source_obj = source_obj, register = TRUE)
 
 system.time(results <- plyr::mdply(params, .fun = runSim, .parallel = TRUE))
 
