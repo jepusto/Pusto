@@ -12,6 +12,7 @@
 #' \dontrun{
 #' Rnw_APA6("Awesome-New-Paper")
 #' }
+#' 
 
 
 Rnw_APA6 <- function(filename, ...) {
@@ -19,7 +20,7 @@ Rnw_APA6 <- function(filename, ...) {
   to <- paste0(gsub(" ","-",filename),".Rnw")
   copy <- file.copy(from, to, ...)
 
-  return(file.edit(to))
+  return(utils::file.edit(to))
 }
 
 
@@ -42,7 +43,7 @@ Simulation_Skeleton <- function(filename, ...) {
   from <- system.file("templates","Simulation-Skeleton.R",package="Pusto")
   to <- paste0(filename,".R")
   copy <- file.copy(from, to, ...)
-  return(file.edit(to))
+  return(utils::file.edit(to))
 }
 
 

@@ -32,8 +32,6 @@
 #' stopCluster(cluster)
 #' }
 #'
-#'   
-
 
 
 start_parallel <- function (cores, source_obj = NULL, packages = NULL, 
@@ -73,7 +71,7 @@ start_parallel <- function (cores, source_obj = NULL, packages = NULL,
       cluster <- multidplyr::create_cluster(cores = cores)
     } else {
       cluster <- parallel::makePSOCKcluster(cores)
-      cat("Don't forget to use stopCluster() to close the cluster.")
+      cat("Don't forget to use stop_parallel() to close the cluster.")
     }
     
     if (register) {
@@ -105,3 +103,24 @@ start_parallel <- function (cores, source_obj = NULL, packages = NULL,
     return(NULL)
   }
 }
+
+#' @title Shut down worker nodes on a cluster
+#'   
+#' @description Explicitly shut down the worker nodes in a cluster created by \code{start_parallel}
+#'   
+#'   
+#' @param cluster object of class \code{"cluster"}.
+#'   
+#' @export
+#'   
+#' @examples
+#' \dontrun{
+#' cluster <- start_parallel()
+#' stop_parallel(cluster)
+#' }
+#'
+#'
+#'
+
+stop_parallel <- function(cluster = NULL) parallel::stopCluster(cluster)
+
