@@ -17,6 +17,7 @@ Imports:
     dplyr,
     tidyr,
     furrr,
+    future,
     magrittr,
     rlang,
     utils

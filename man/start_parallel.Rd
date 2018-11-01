@@ -5,7 +5,7 @@
 \title{Initializes a cluster for parallel computing}
 \usage{
 start_parallel(cores, source_obj = NULL, packages = NULL,
-  register = FALSE)
+  future_plan = TRUE, register = FALSE)
 }
 \arguments{
 \item{cores}{desired number of cores. Defaults to one less than the number of
@@ -14,23 +14,26 @@ available cores.}
 \item{source_obj}{list of objects to be exported to each node of the cluster.
 Defaults to NULL.}
 
-\item{packages}{list of package names to be exported to each node of the 
+\item{packages}{list of package names to be exported to each node of the
 cluster. Defaults to NULL.}
 
-\item{register}{logical value indicating whether or not to register the 
-cluster using doParallel or doSNOW. This is necessary for using the 
+\item{future_plan}{logical value indicating whether to initiate a future
+evaluation strategy using \code{future::plan}. Defaults to TRUE.}
+
+\item{register}{logical value indicating whether or not to register the
+cluster using doParallel or doSNOW. This is necessary for using the
 \code{.parallel} option in \pkg{plyr} functions. Defaults to FALSE.}
 }
 \value{
 On TACC or Windows, returns the cluster object. On Mac, returns NULL.
 }
 \description{
-On Windows, this function initializes a socket cluster and then 
+On Windows, this function initializes a socket cluster and then
   (optionally) registers the cluster with the \pkg{DoParallel} package, loads
   a list of packages on each node of the cluster, exports a list of objects
-  to each node, and returns the cluster object. On Mac and other operating 
+  to each node, and returns the cluster object. On Mac and other operating
   systems that can take advantage of multicore, the function does nothing but
-  (optionally) register a cluster of the specified number of nodes with 
+  (optionally) register a cluster of the specified number of nodes with
   \pkg{DoParallel}. On TACC, the function detects an existing MPI cluster
   using \code{\link[snow]{getMPIcluster}}, (optionally) registers the cluster
   with \pkg{doSNOW}, loads a list of packages on each node, exports a list of
