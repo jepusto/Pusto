@@ -46,7 +46,7 @@ evaluate_by_row <- function(params, sim_function, ...,
     )
   )
   
-  if (system_time) cat(sys_tm, "\n")
+  if (system_time) print(sys_tm, "\n")
   
   params %>%
     dplyr::mutate(.results = results_list) %>%
