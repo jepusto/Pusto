@@ -18,6 +18,7 @@ Imports:
     tidyr,
     furrr,
     magrittr,
+    rlang,
     utils
 Suggests:
     plyr,
