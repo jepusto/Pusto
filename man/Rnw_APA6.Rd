@@ -18,4 +18,5 @@ Creates and opens an .Rnw file containing a template for writing a manuscript in
 \dontrun{
 Rnw_APA6("Awesome-New-Paper")
 }
+
 }

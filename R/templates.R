@@ -12,6 +12,7 @@
 #' \dontrun{
 #' Rnw_APA6("Awesome-New-Paper")
 #' }
+#' 
 
 
 Rnw_APA6 <- function(filename, ...) {

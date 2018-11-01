@@ -42,5 +42,4 @@ cluster <- start_parallel()
 stopCluster(cluster)
 }
 
-  
 }

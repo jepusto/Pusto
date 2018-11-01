@@ -17,7 +17,8 @@ Imports:
     dplyr,
     tidyr,
     furrr,
-    magrittr
+    magrittr,
+    utils
 Suggests:
     plyr,
     multidplyr,
