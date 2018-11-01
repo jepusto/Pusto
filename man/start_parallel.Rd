@@ -5,7 +5,7 @@
 \title{Initializes a cluster for parallel computing}
 \usage{
 start_parallel(cores, source_obj = NULL, packages = NULL,
-  future_plan = TRUE, register = FALSE)
+  setup = "plan")
 }
 \arguments{
 \item{cores}{desired number of cores. Defaults to one less than the number of
@@ -17,12 +17,10 @@ Defaults to NULL.}
 \item{packages}{list of package names to be exported to each node of the
 cluster. Defaults to NULL.}
 
-\item{future_plan}{logical value indicating whether to initiate a future
-evaluation strategy using \code{future::plan}. Defaults to TRUE.}
-
-\item{register}{logical value indicating whether or not to register the
-cluster using doParallel or doSNOW. This is necessary for using the
-\code{.parallel} option in \pkg{plyr} functions. Defaults to FALSE.}
+\item{setup}{character string indicating how to further configure the cluster. Set to \code{"plan"} to initiate a future
+evaluation strategy using \code{future::plan}. Set to \code{"register"} to register the
+cluster using doParallel or doSNOW, which is necessary for using the
+\code{.parallel} option in \pkg{plyr} functions. Defaults to \code{"plan"}.}
 }
 \value{
 On TACC or Windows, returns the cluster object. On Mac, returns NULL.

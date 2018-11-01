@@ -18,11 +18,10 @@
 #'   Defaults to NULL.
 #' @param packages list of package names to be exported to each node of the
 #'   cluster. Defaults to NULL.
-#' @param future_plan logical value indicating whether to initiate a future
-#'   evaluation strategy using \code{future::plan}. Defaults to TRUE.
-#' @param register logical value indicating whether or not to register the
-#'   cluster using doParallel or doSNOW. This is necessary for using the
-#'   \code{.parallel} option in \pkg{plyr} functions. Defaults to FALSE.
+#' @param setup character string indicating how to further configure the cluster. Set to \code{"plan"} to initiate a future
+#'   evaluation strategy using \code{future::plan}. Set to \code{"register"} to register the
+#'   cluster using doParallel or doSNOW, which is necessary for using the
+#'   \code{.parallel} option in \pkg{plyr} functions. Defaults to \code{"plan"}.
 #'
 #' @export
 #'
@@ -37,7 +36,7 @@
 
 
 start_parallel <- function (cores, source_obj = NULL, packages = NULL, 
-                            future_plan = TRUE, register = FALSE) {
+                            setup = "plan") {
   
   if (requireNamespace("snow", quietly = TRUE)) {
     
@@ -47,10 +46,10 @@ start_parallel <- function (cores, source_obj = NULL, packages = NULL,
       
       cl <- snow::getMPIcluster()
       
-      if (future_plan) {
+      if (setup == "plan") {
         future::plan(future::cluster, workers = cl)
       }
-      if (register) {
+      if (setup == "register") {
         if (!requireNamespace("doSNOW", quietly = TRUE)) {
           stop("The doSNOW package is required for registering the cluster. Please install it.", call. = FALSE)
         }     
@@ -81,11 +80,11 @@ start_parallel <- function (cores, source_obj = NULL, packages = NULL,
       cat("Don't forget to use stop_parallel() to close the cluster.")
     }
     
-    if (future_plan) {
+    if (setup == "plan") {
       future::plan(future::cluster, workers = cl)
     }
     
-    if (register) {
+    if (setup == "register") {
       if (!requireNamespace("doParallel", quietly = TRUE)) {
         stop("The doParallel package is required for registering the cluster. Please install it.", call. = FALSE)
       }     
@@ -106,10 +105,10 @@ start_parallel <- function (cores, source_obj = NULL, packages = NULL,
     
     # Mac setup
     
-    if (future_plan) {
+    if (setup == "plan") {
       future::plan(future::multiprocess)
     }
-    if (register) {
+    if (setup == "register") {
       if (!requireNamespace("doParallel", quietly = TRUE)) {
         stop("The doParallel package is required for registering the cluster. Please install it.", call. = FALSE)
       }
