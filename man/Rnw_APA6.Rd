@@ -19,4 +19,3 @@ Creates and opens an .Rnw file containing a template for writing a manuscript in
 Rnw_APA6("Awesome-New-Paper")
 }
 }
-

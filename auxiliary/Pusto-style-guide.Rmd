@@ -1,10 +1,14 @@
 ---
 title: "Pusto's R style guide"
 output: 
-  html_document:
+  rmarkdown::html_vignette:
     number_sections: true
     toc: true
     keep_md: true
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 This is the style guide for students who are collaborating with or working for me. A coding style guide, much like the APA style guide, is a set of conventions designed to make it easier to read, debug, share, and generally interact with code. I make no claim that these rules are the best or only way to write clear, legible code---they are just conventions that I try to follow, refined as I've learned more about programming. 

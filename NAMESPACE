@@ -2,4 +2,8 @@
 
 export(Rnw_APA6)
 export(Simulation_Skeleton)
+export(evaluate_by_row)
 export(start_parallel)
+importFrom(furrr,"future_options")
+importFrom(magrittr,"%>%")
+importFrom(rlang,.data)

@@ -8,15 +8,23 @@ Description: Miscellaneous data analysis and simulation tools. Includes
     Monte Carlo simulation study.
 URL: https://github.com/jepusto/Pusto
 Depends:
-    R (>= 3.1.2)
+    R (>= 3.1.2),
 Imports:
     doParallel,
     doSNOW,
     parallel,
-    snow
+    snow,
+    dplyr,
+    tidyr,
+    furrr,
+    magrittr
 Suggests:
     plyr,
-    multidplyr
+    multidplyr,
+    knitr,
+    rmarkdown
 License: GPL (>= 2)
 LazyData: true
-RoxygenNote: 5.0.1
+RoxygenNote: 6.1.0
+VignetteBuilder: knitr
+Encoding: UTF-8
