@@ -18,6 +18,7 @@ Imports:
     dplyr,
     tidyr,
     furrr,
+    future,
     magrittr,
     utils
 Suggests:
