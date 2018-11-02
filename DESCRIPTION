@@ -14,11 +14,11 @@ Imports:
     doSNOW,
     parallel,
     snow,
+    rlang,
     dplyr,
     tidyr,
     furrr,
     magrittr,
-    rlang,
     utils
 Suggests:
     plyr,

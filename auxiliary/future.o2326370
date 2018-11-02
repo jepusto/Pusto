@@ -1,0 +1,245 @@
+TACC:  Starting up job 2326370 
+TACC:  Starting parallel tasks... 
+
+R version 3.4.0 (2017-04-21) -- "You Stupid Darkness"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+
+R version 3.4.0 (2017-04-21) -- "You Stupid Darkness"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+
+R version 3.4.0 (2017-04-21) -- "You Stupid Darkness"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+
+R version 3.4.0 (2017-04-21) -- "You Stupid Darkness"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+
+R version 3.4.0 (2017-04-21) -- "You Stupid Darkness"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+Loading required package: utils
+Loading required package: utils
+Loading required package: utils
+Loading required package: utils
+Loading required package: utils
+> rm(list=ls())
+> 
+> #----------------------------
+> # data-generating function 
+> #----------------------------
+> 
+> r_mvt_items <- function(n, p, icc, df) {
++   V_mat <- icc + diag(1 - icc, nrow = p)
++   X <- mvtnorm::rmvt(n = n, sigma = V_mat, df = df)
++   colnames(X) <- LETTERS[1:p]
++   X
++ }
+> 
+> small_sample <- r_mvt_items(n = 8, p = 3, icc = 0.7, df = 5)
+> small_sample
+               A           B          C
+[1,]  0.02201172 -0.53654966 -0.2067469
+[2,]  0.40000334  2.32332328  1.1928358
+[3,] -0.76192913 -0.09969695  0.3519116
+[4,]  0.95391297 -0.01200990  1.0365287
+[5,] -0.25086578 -0.76358464 -0.1716242
+[6,]  0.58546883  0.82041293  1.5881687
+[7,]  0.07931553 -0.97459317 -0.3403148
+[8,] -0.33873501  0.41292014  0.2843701
+> 
+> #----------------------------
+> # Estimation function
+> #----------------------------
+> 
+> alpha_CI <- function(dat, coverage = .95) {
++   V <- cov(dat)
++   p <- ncol(dat)
++   n <- nrow(dat)
++   A <- p / (p - 1) * (1 - sum(diag(V)) / sum(V))
++   B <- log(1 - A) / 2
++   SE_B <- sqrt(p / (2 * n * (p - 1)))
++   z <- qnorm((1 - coverage) / 2)
++   CI_B <- B + data.frame(L = -1, U = 1) * SE_B * z
++   1 - exp(2 * CI_B)
++ }
+> 
+> alpha_CI(small_sample)
+          L         U
+1 0.2378353 0.9308895
+> 
+> #----------------------------
+> # simulation driver
+> #----------------------------
+> 
+> simulate_alpha <- function(reps, n, p, alpha, df, ..., seed = NULL) {
++   
++   if (!is.null(seed)) set.seed(seed)
++   
++   icc <- alpha / (p - alpha * (p - 1))
++   rerun(reps, {
++     dat <- r_mvt_items(n = n, p = p, icc = icc, df = df)
++     alpha_CI(dat)
++   }) %>%
++     bind_rows() %>%
++     mutate(cover = L < alpha & alpha < U) %>%
++     summarise(coverage = mean(cover))
++ }
+> 
+> source_obj <- ls()
+> 
+> #----------------------------
+> # experimental design
+> #----------------------------
+> library(tidyr)
+> library(dplyr)
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+> 
+> alpha_design <- 
++   crossing(
++     alpha = seq(0.5, 0.9, 0.1),
++     n = seq(20, 100, 20), 
++     p = c(3, 9, 12)
++   ) %>%
++   mutate(
++     reps = 1000,
++     df = 10,
++     seed = row_number()
++   )
+> 
+> #----------------------------
+> # simulate in parallel
+> #----------------------------
+> 
+> cl <- snow::getMPIcluster()
+> future::plan(future::cluster, workers = cl)
+> 
+> results <- furrr::future_pmap(alpha_design, .f = simulate_alpha)
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Error in mpi.iprobe(source = node$rank, tag = mpi.any.tag()) : 
+  Invalid communicator, error stack:
+MPI_Iprobe(137): MPI_Iprobe(src=1, tag=MPI_ANY_TAG, MPI_COMM_NULL, flag=0x7ffde09c06a0, status=0x308eb60) failed
+MPI_Iprobe(84).: Null communicator
+Calls: <Anonymous> ... resolved.ClusterFuture -> resolveMPI -> resolveMPI -> mpi.iprobe -> .Call
+Execution halted
+TACC:  MPI job exited with code: 1 
+TACC:  Shutdown complete. Exiting. 
