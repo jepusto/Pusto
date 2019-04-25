@@ -51,10 +51,12 @@ performance <- function(results, model_params) {
 runSim <- function(iterations, model_params, design_params, seed = NULL) {
   if (!is.null(seed)) set.seed(seed)
 
-  results <- replicate(iterations, {
-                dat <- dgm(model_params)
-                estimate(dat, design_params)
-              })
+  results <- 
+    rerun(iterations, {
+      dat <- dgm(model_params)
+      estimate(dat, design_params)
+    }) %>%
+    bind_rows()
 
   performance(results, model_params)
 }
@@ -72,9 +74,13 @@ set.seed(20150316) # change this seed value!
 # now express the simulation parameters as vectors/lists
 
 design_factors <- list(factor1 = , factor2 = , ...) # combine into a design set
-params <- expand.grid(design_factors)
-params$iterations <- 5
-params$seed <- round(runif(1) * 2^30) + 1:nrow(params)
+
+params <- 
+  cross_df(design_factors) %>%
+  mutate(
+    iterations = 5,
+    seed = round(runif(1) * 2^30) + 1:n()
+  )
 
 # All look right?
 lengths(design_factors)
@@ -96,8 +102,9 @@ library(purrr)
 
 system.time(
   results <- 
-    params %>% 
-    invoke_rows(.f = runSim, .to = "res")
+    params %>%
+    mutate(res = pmap(., .f = runSim)) %>%
+    unnest()
 )
 
 #--------------------------------------------------------
@@ -112,20 +119,18 @@ system.time(results <- plyr::mdply(params, .fun = runSim, .parallel = TRUE))
 stopCluster(cluster)
 
 #--------------------------------------------------------
-# run simulations in parallel - multidplyr workflow
+# run simulations in parallel - future + furrr workflow
 #--------------------------------------------------------
 
-library(multidplyr)
-library(Pusto)
-cluster <- start_parallel(source_obj = source_obj)
+library(future)
+library(furrr)
+plan(multiprocess) # choose an appropriate plan from the future package
 
 system.time(
   results <- 
     params %>%
-    partition(cluster = cluster) %>%
-    do(invoke_rows(.d = ., .f = runSim, .to = "res")) %>%
-    collect() %>% ungroup() %>%
-    select(-PARTITION_ID)
+    mutate(res = future_pmap(., .f = runSim)) %>%
+    unnest()
 )
 
 #--------------------------------------------------------
