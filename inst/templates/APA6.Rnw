@@ -13,7 +13,6 @@
 
 \usepackage{graphicx}
 
-\usepackage{fixltx2e}
 \usepackage{subcaption}
 \usepackage{float}
 
